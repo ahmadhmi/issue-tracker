@@ -12,7 +12,6 @@ import { newIssueSchema } from "@/app/validationSchema";
 import { z } from "zod";
 import ErrorMessage from "@/app/components/ErrorMessage";
 import Spinner from "@/app/components/Spinner";
-import delay from "delay";
 
 type IssueForm = z.infer<typeof newIssueSchema>;
 
@@ -41,7 +40,6 @@ const NewIssuePage = async () => {
       setError("An unexpected error occurred.");
     }
   })
-  await delay(2000);
 
   return (
     <div className="max-w-xl">
