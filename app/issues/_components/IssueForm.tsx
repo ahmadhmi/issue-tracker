@@ -1,7 +1,7 @@
 "use client";
 
 import { Button, Callout, Text, TextField } from "@radix-ui/themes";
-import SimpleMDE from "react-simplemde-editor";
+import dynamic from "next/dynamic";
 import "easymde/dist/easymde.min.css";
 import { Controller, useForm } from "react-hook-form";
 import axios from "axios";
@@ -14,10 +14,13 @@ import ErrorMessage from "@/app/components/ErrorMessage";
 import Spinner from "@/app/components/Spinner";
 import { Issue } from "@prisma/client";
 
+const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
+  ssr: false,
+});
+
 type IssueFormData = z.infer<typeof newIssueSchema>;
 
-const IssueForm = async ({issue} : {issue?: Issue}) => {
-  
+const IssueForm = async ({ issue }: { issue?: Issue }) => {
   const router = useRouter();
   const {
     register,
@@ -40,7 +43,7 @@ const IssueForm = async ({issue} : {issue?: Issue}) => {
       setIsSubmitting(false);
       setError("An unexpected error occurred.");
     }
-  })
+  });
 
   return (
     <div className="max-w-xl">
@@ -49,12 +52,13 @@ const IssueForm = async ({issue} : {issue?: Issue}) => {
           <Callout.Text>{error}</Callout.Text>
         </Callout.Root>
       )}
-      <form
-        className=" space-y-3"
-        onSubmit={onSubmit}
-      >
+      <form className=" space-y-3" onSubmit={onSubmit}>
         <TextField.Root>
-          <TextField.Input defaultValue={issue?.title} placeholder="Title" {...register("title")} />
+          <TextField.Input
+            defaultValue={issue?.title}
+            placeholder="Title"
+            {...register("title")}
+          />
         </TextField.Root>
         <ErrorMessage>{errors.title?.message}</ErrorMessage>
         <Controller
